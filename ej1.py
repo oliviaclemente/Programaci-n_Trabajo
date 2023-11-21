@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-archivo = 'R.csv'
+archivo = 'Auto_Sales_data.csv'
 data = pd.read_csv(archivo)  # Utiliza pd.read_csv() para cargar los datos desde un archivo CSV
 
 primeras = data.head()
