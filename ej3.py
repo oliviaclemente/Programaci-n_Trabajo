@@ -29,45 +29,76 @@ print(f"Número de columnas: {ncolumnas}")
 tipos = data.dtypes
 print(f"Tipos de datos de cada columna:{tipos}")
 
-# Calcular media, mediana, desviación estándar de la columna 'QUANTITYORDERED'
-media = data['QUANTITYORDERED'].mean()
-print(media)
+#Mirar que columnas tienen datos numéricos
+#print(df.select_dtypes(include=[np.number]).columns)
+#Haz los calculos solo para las columnas donde es útil y tiene sentido
 
-mediana = data['QUANTITYORDERED'].median()
-print(mediana)
+#crea una función para calcular la media
+def media(columna):
+    suma = 0
+    for i in columna:
+        suma += i
+    return suma / len(columna)
 
-desviacion = data['QUANTITYORDERED'].std()
-print(desviacion)
+#crea una función para calcular la mediana
+def mediana(columna):
+    columna_ordenada = sorted(columna)
+    if len(columna) % 2 == 0:
+        mediana = (columna_ordenada[int(len(columna) / 2)] + columna_ordenada[int(len(columna) / 2) - 1]) / 2
+    else:
+        mediana = columna_ordenada[int(len(columna) / 2)]
+    return mediana
 
-# Calcular media, mediana, desviación estándar de la columna 'PRICEEACH'
-media = data['PRICEEACH'].mean()
-print(media)
+#crea una función para calcular la desviación estándar
+def desviacion_estandar(columna):
+    suma = 0
+    for i in columna:
+        suma += (i - media(columna))**2
+    return (suma / len(columna))**0.5
 
-mediana = data['PRICEEACH'].median()
-print(mediana)
+#calcular la media, mediana y desviación estandar de la columna cantidad_de_pedidos
+#print(f"Media de cantidad de pedidos: {media(df['cantidad_de_pedidos'])}")
+#print(f"Mediana de cantidad de pedidos: {mediana(df['cantidad_de_pedidos'])}")
+#print(f"Desviación estándar de cantidad de pedidos: {desviacion_estandar(df['cantidad_de_pedidos'])}")
 
-desviacion = data['PRICEEACH'].std()
-print(desviacion)
+#calcular la media, mediana y desviación estandar de la columna precio_cada_pedido
+#print(f"Media de precio cada pedido: {media(df['precio_cada_pedido'])}")
+#print(f"Mediana de precio cada pedido: {mediana(df['precio_cada_pedido'])}")
+#print(f"Desviación estándar de precio cada pedido: {desviacion_estandar(df['precio_cada_pedido'])}")
 
-# Calcular media, mediana, desviación estándar de la columna 'SALES'
-media = data['SALES'].mean()
-print(media)
+#calcular la media, mediana y desviación estandar de la columna ventas
+#print(f"Media de ventas: {media(df['ventas'])}")
+#print(f"Mediana de ventas: {mediana(df['ventas'])}")
+#print(f"Desviación estándar de ventas: {desviacion_estandar(df['ventas'])}")
 
-mediana = data['SALES'].median()
-print(mediana)
+#calcular la media, mediana y desviación estandar de la columna precio_venta_sugerido
+#print(f"Media de precio venta sugerido: {media(df['precio_venta_sugerido'])}")
+#print(f"Mediana de precio venta sugerido: {mediana(df['precio_venta_sugerido'])}")
+#print(f"Desviación estándar de precio venta sugerido: {desviacion_estandar(df['precio_venta_sugerido'])}")
 
-desviacion = data['SALES'].std()
-print(desviacion)
+#Teniendo en cuenta que hay disntintos tipos de productos que se venden tiene sentido calcular la los estadísticos de cada producto
+#Para esto se puede crear una función que reciba como parámetro el nombre del producto y la columna y calcule los estadísticos
+#def estadisticos_producto(producto, columna):
+    print(f"Media de {producto}: {media(df[df['linea_producto'] == producto][columna])}")
+    print(f"Mediana de {producto}: {mediana(df[df['linea_producto'] == producto][columna])}")
+    print(f"Desviación estándar de {producto}: {desviacion_estandar(df[df['linea_producto'] == producto][columna])}")
 
-# Calcular media, mediana, desviación estándar de la columna 'MSRP'
-media = data['MSRP'].mean()
-print(media)
+#Mirar que productos hay que variables aparecen en linea_producto
+#print(df['linea_producto'].unique())
 
-mediana = data['MSRP'].median()
-print(mediana)
+#Calcular los estadísticos para cada producto en ventas
+#estadisticos_producto('Classic Cars', 'ventas')
+#estadisticos_producto('Motorcycles', 'ventas')
+#estadisticos_producto('Planes', 'ventas')
+#estadisticos_producto('Ships', 'ventas')
+#estadisticos_producto('Trains', 'ventas')
+#estadisticos_producto('Trucks and Buses', 'ventas')
+#estadisticos_producto('Vintage Cars', 'ventas')
 
-desviacion = data['MSRP'].std()
-print(desviacion)
+
+
+
+
 
 #Crear gráficos para visualizar la distribución de los datos, como histogramas y diagramas de caja.
 import matplotlib.pyplot as plt
@@ -86,6 +117,12 @@ plt.show()
 #Histograma que muestra la distribución de cada Productline
 sns.histplot(data=data, x='PRODUCTLINE', hue='PRODUCTLINE', multiple='stack')
 plt.show()
+
+
+
+
+
+
 
 #Identifiquen y analicen las correlaciones entre variables
 #calcular el coeficiente de relación de Pearson para ver la correlación lineal
@@ -114,6 +151,7 @@ for i in corr.columns:
             corr[i][j] = 'NULA'
 
 print(corr)
+
 
 #Calcular la recta de regresión
 import numpy as np
