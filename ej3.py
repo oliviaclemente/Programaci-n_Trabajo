@@ -73,9 +73,68 @@ print(desviacion)
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Histograma de la columna 'PRICEEACH'
-plt.hist(data['PRICEEACH'])
-plt.xlabel('Precio')
-plt.ylabel('Frecuencia')
-plt.title('Histograma de la columna PRICEEACH')
+#que valores toma PRODUCTLINE
+print(data['PRODUCTLINE'].unique())
+
+#diagrama de cajas de PRICEEACH para Classic Cars
+sns.boxplot(x='PRICEEACH', y='PRODUCTLINE', data=data[data['PRODUCTLINE']=='Classic Cars'], orient='h')
+plt.title('Diagrama de cajas de PRICEEACH para Classic Cars')
+plt.xlabel('PRICEEACH')
+plt.ylabel('PRODUCTLINE')
+plt.show()
+
+#Histograma que muestra la distribución de cada Productline
+sns.histplot(data=data, x='PRODUCTLINE', hue='PRODUCTLINE', multiple='stack')
+plt.show()
+
+#Identifiquen y analicen las correlaciones entre variables
+#calcular el coeficiente de relación de Pearson para ver la correlación lineal
+corr = data.corr(method='pearson')
+
+# Blucle for que sustituye los números por palabras
+for i in corr.columns:
+    for j in corr.columns:
+        if corr[i][j] == 1:
+            corr[i][j] = 'PERFECTA (+)'
+        elif corr[i][j] == -1:
+            corr[i][j] = 'PERFECTA (-)'
+        elif corr[i][j] < 1 and corr[i][j] >= 0.5:
+            corr[i][j] = 'FUERTE (+)'
+        elif corr[i][j] > -1 and corr[i][j] <= -0.5:
+            corr[i][j] = 'FUERTE (-)'
+        elif corr[i][j] < 0.5 and corr[i][j] >= 0.3:
+            corr[i][j] = 'MODERADA (+)'
+        elif corr[i][j] > -0.5 and corr[i][j] <= -0.3:
+            corr[i][j] = 'MODERADA (-)'
+        elif corr[i][j] < 0.3 and corr[i][j] >= 0.1:
+            corr[i][j] = 'DEBIL (+)'
+        elif corr[i][j] > -0.3 and corr[i][j] <= -0.1:
+            corr[i][j] = 'DEBIL (-)'
+        else:
+            corr[i][j] = 'NULA'
+
+print(corr)
+
+#Calcular la recta de regresión
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Datos de PRICEEACH Y SALES
+PRICEEACH = data['PRICEEACH'].values
+SALES = data['SALES'].values
+
+# Calcular la recta de regresión
+pendiente, ordenada_al_origen = np.polyfit(PRICEEACH, SALES, 1)
+#np.polyfit se utiliza para calcular directamente la pendiente y la ordenada al origen de la recta de regresión
+
+# Imprimir los coeficientes
+print(f"Pendiente: {pendiente}")
+print(f"Ordenada_al_origen: {ordenada_al_origen}")
+
+# Visualizar los datos y la recta de regresión
+plt.scatter(PRICEEACH, SALES, label='Datos reales')
+plt.plot(PRICEEACH, pendiente * PRICEEACH + ordenada_al_origen, color='red', label='Recta de regresión')
+plt.xlabel('PRICEEACH')
+plt.ylabel('SALES')
+plt.legend()
 plt.show()
