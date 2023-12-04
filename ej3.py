@@ -29,6 +29,7 @@ print(f"Número de columnas: {ncolumnas}")
 tipos = data.dtypes
 print(f"Tipos de datos de cada columna:{tipos}")
 
+
 #Mirar que columnas tienen datos numéricos
 #print(df.select_dtypes(include=[np.number]).columns)
 #Haz los calculos solo para las columnas donde es útil y tiene sentido
