@@ -29,6 +29,7 @@ print(f"Número de columnas: {ncolumnas}")
 tipos = data.dtypes
 print(f"Tipos de datos de cada columna:{tipos}")
 
+
 # Calcular media, mediana, desviación estándar de la columna 'QUANTITYORDERED'
 media = data['QUANTITYORDERED'].mean()
 print(media)
