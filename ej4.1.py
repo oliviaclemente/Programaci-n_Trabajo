@@ -1,58 +1,27 @@
-import numpy as np
 import pandas as pd
 
-# Cargar datos desde el archivo CSV
 archivo = 'Auto_Sales_data.csv'
 data = pd.read_csv(archivo)
 
-# Función para reemplazar NaN con la moda o la media
-def replace_nan(df, column, method='mean'):
-    if df[column].isnull().sum() > 0:
-        if method == 'mean':
-            df[column].fillna(df[column].mean(), inplace=True)
-        elif method == 'mode':
-            df[column].fillna(df[column].mode()[0], inplace=True)
+#Filtramos las filas donde QUANTITYORDERED >50
+condicion_filtrado = data['QUANTITYORDERED'] > 50
 
-# Aplicar la función a todas las columnas
-for column in data.columns:
-    replace_nan(data, column)
+# Aplicar el filtrado utilizando la función loc
+datos_filtrados = data.loc[condicion_filtrado]
+print(datos_filtrados)
 
-# Tratar valores fuera de 2 desviaciones estándar
-for column in data.select_dtypes(include=[np.number]).columns:
-    mean = data[column].mean()
-    std = data[column].std()
-    upper_bound = mean + 2*std
-    lower_bound = mean - 2*std
-    data[column] = np.where((data[column] > upper_bound) | (data[column] < lower_bound), data[column].mean(), data[column])
 
-# Convertir tipos de datos si es necesario
+# Verifica los nombres de las columnas en tu DataFrame
+print(data.columns)
 
-# Renombrar columnas
-data.columns = ['columna_' + str(i) for i in range(1, len(data.columns)+1)]
+# Agreguemos una nueva columna llamada 'Estado' basada en las ventas anuales
+for indice, fila in data.iterrows():
+    if 'Ventas_Anuales' in data.columns and fila['Ventas_Anuales'] > 10000:
+        data.at[indice, 'Estado'] = 'Alto'
+    elif 'Ventas_Anuales' in data.columns and 5000 <= fila['Ventas_Anuales'] <= 10000:
+        data.at[indice, 'Estado'] = 'Moderado'
+    else:
+        data.at[indice, 'Estado'] = 'Bajo'
 
-# Imprimir estadísticas básicas de las columnas numéricas
-for column in data.select_dtypes(include=[np.number]).columns:
-    print(f"\nEstadísticas de la columna {column}:")
-    print(f"Media: {data[column].mean()}")
-    print(f"Mediana: {data[column].median()}")
-    print(f"Desviación Estándar: {data[column].std()}")
-
-# Crear gráficos para visualizar la distribución de los datos
-for column in data.select_dtypes(include=[np.number]).columns:
-    plt.figure(figsize=(10, 6))
-    sns.histplot(data=data, x=column, kde=True)
-    plt.title(f'Distribución de {column}')
-    plt.show()
-
-# Filtrar el dataset utilizando condiciones específicas
-filtered_data = data[data['columna_1'] > 100]
-
-# Crear nuevas columnas aplicando funciones o cálculos basados en valores de otras columnas
-data['nueva_columna'] = data['columna_2'] * 2
-
-# Utilizar bucles para iterar sobre filas o columnas y realizar cálculos
-for index, row in data.iterrows():
-    data.at[index, 'nueva_columna_2'] = row['columna_3'] / 2
-
-# Imprimir el DataFrame después de las manipulaciones
-print(data.head())
+# Imprime el DataFrame modificado
+print(data)
