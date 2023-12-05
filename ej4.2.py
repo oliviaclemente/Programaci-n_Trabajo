@@ -1,25 +1,47 @@
 import pandas as pd
 
-# Leer el archivo CSV
-archivo = 'Auto_Sales_data.csv'
-data = pd.read_csv(archivo)
+# Cargamos los datos
+df = pd.read_csv('Auto_Sales_data.csv')
 
-# Ejemplo 1: Crear una nueva columna que sea la suma de dos columnas existentes
-data['Nueva_Columna'] = data['Columna1'] + data['Columna2']
+# 1. Margen de Ganancia
+df['Margen_Ganancia'] = (df['SALES'] - (df['QUANTITYORDERED'] * df['PRICEEACH'])) / df['SALES']
 
-# Ejemplo 2: Crear una nueva columna que sea el producto de dos columnas existentes
-data['Otra_Nueva_Columna'] = data['Columna3'] * data['Columna4']
+# 2. Categoría de Ventas
+def categorizar_ventas(sales):
+    if sales < 5000:
+        return 'Pequeña'
+    elif sales < 20000:
+        return 'Mediana'
+    else:
+        return 'Grande'
 
-# Ejemplo 3: Aplicar una función a una columna existente para crear una nueva columna
-def calcular_nueva_columna(valor):
-    return valor * 2
+df['Categoria_Ventas'] = df['SALES'].apply(categorizar_ventas)
 
-data['Columna_Nueva'] = data['Columna_Existente'].apply(calcular_nueva_columna)
+# 3. Tiempo desde la Última Compra
+def clasificar_tiempo(dias):
+    if dias <= 30:
+        return 'Reciente'
+    elif dias <= 90:
+        return 'Moderado'
+    else:
+        return 'Distante'
+    
+df['Clasificacion_Compra'] = df['DAYS_SINCE_LASTORDER'].apply(clasificar_tiempo)
 
-# Ejemplo 4: Crear una nueva columna basada en una condición
-data['Nueva_Columna_Condicional'] = np.where(data['Columna_Condicional'] > 10, 'Mayor', 'Menor')
+# 4. Prioridad de Cliente (Ejemplo simple)
+# Esto podría ser más complejo si acumulamos datos por cliente
+df['Prioridad_Cliente'] = df['SALES'].apply(lambda x: 'Alta' if x > 10000 else ('Media' if x > 5000 else 'Baja'))
 
-# Puedes seguir combinando funciones y operaciones según tus necesidades.
+# 5. Estado de Pedido
+def estado_pedido(status):
+    if status in ['Shipped', 'Resolved']:
+        return 'Completado'
+    elif status in ['In Process', 'On Hold']:
+        return 'En Proceso'
+    else:
+        return 'Retrasado'
 
-# Guardar el DataFrame modificado en un nuevo archivo CSV
-data.to_csv('Nuevo_Archivo.csv', index=False)
+df['Estado_Pedido'] = df['STATUS'].apply(estado_pedido)
+
+# Guardamos los cambios
+df.to_csv('Auto_Sales_data_modificado.csv', index=False)
