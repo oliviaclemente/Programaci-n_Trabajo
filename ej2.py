@@ -38,6 +38,5 @@ print(df)
 # Convertir tipos de datos si es necesario
 
 # Renombrar columnas
-
 df.columns = ['columna_' + str(i) for i in range(1, len(df.columns)+1)]
 print(df.columns)
