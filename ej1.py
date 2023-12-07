@@ -20,3 +20,4 @@ print(f"Número de columnas: {ncolumnas}")
 
 tipos = data.dtypes
 print(f"Tipos de datos de cada columna:{tipos}")
+
