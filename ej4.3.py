@@ -17,4 +17,4 @@ for column in df.columns:
 # Guardar el DataFrame modificado en un nuevo archivo CSV
 df.to_csv('Auto_Sales_data_modificado_resultado.csv', index=False)
 
- #La funcion index=False se ultiliza para uardar el DataFrame en un archivo CSV sin incluir la columna de índices
+ #La funcion index=False se ultiliza para guardar el DataFrame en un archivo CSV sin incluir la columna de índices
