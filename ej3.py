@@ -20,6 +20,8 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 
+from ej2 import df
+
 
 # Eliminar columnas que no se utilizarán y separar datos numericos y no numericos
 df_num = df.select_dtypes(include=['float64', 'int64']).drop(columns=['numero_del_pedido', 'numero_linea_pedido'])
